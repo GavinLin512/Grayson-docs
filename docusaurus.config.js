@@ -27,6 +27,7 @@ const config = {
     defaultLocale: 'zh-TW',
     locales: ['zh-TW'],
   },
+  plugins: ['docusaurus-plugin-sass'], // 改使用 scss
 
   presets: [
     [
@@ -50,7 +51,7 @@ const config = {
           //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve('./src/css/custom.scss'), // 改使用 scss
         },
       }),
     ],
