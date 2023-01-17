@@ -41,6 +41,9 @@ const config = {
           // 暫時不使用編輯此頁
           // editUrl:
           //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          // 顯示最後更新日期、作者
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
         },
         blog: {
           showReadingTime: true,
@@ -67,7 +70,7 @@ const config = {
         respectPrefersColorScheme: true, // 是否使用系統預設模式
       },
       navbar: {
-        title: '首頁',
+        title: 'Grayson\'s Docs',
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.svg',
@@ -77,9 +80,10 @@ const config = {
             type: 'doc',
             docId: 'intro',
             position: 'left',
-            label: 'Tutorial',
+            label: '技術筆記',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
+          {to: '/blog', label: '日常隨筆', position: 'left'},
+          {to: '/readme', label: '網站說明', position: 'left'},
           {
             href: 'https://github.com/GavinLin512',
             label: 'GitHub',
@@ -94,7 +98,7 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
+                label: '技術筆記',
                 to: '/docs/intro',
               },
             ],
@@ -130,7 +134,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Grayson\'s Docs, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Grayson\'s Docs. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

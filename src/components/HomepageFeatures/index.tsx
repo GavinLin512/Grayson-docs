@@ -10,7 +10,7 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: '學習筆記',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
@@ -20,7 +20,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: '技術交流',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
@@ -30,7 +30,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: 'Powered by React',
+    title: '心路歷程',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
