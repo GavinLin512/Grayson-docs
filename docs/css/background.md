@@ -1,0 +1,30 @@
+---
+title: background 相關
+last_update:
+    date: 1/18/2023
+    author: Grayson
+---
+
+## 列印時顯示 background-image
+#### 使用 display + overflow 達到固定 table 表頭的方法
+```scss
+/*window.print() background-image*/
+* {
+  -webkit-print-color-adjust: exact!important;/* Chrome, Safari 6 – 15.3, Edge */
+	color-adjust: exact!important;/* Firefox 48 – 96 */
+}
+```
+
+## 動態修改 svg 的 color
+#### 先使用 mask 方式載入 svg，再用 background-color 修改 color
+```scss
+.icon {
+    background-color: red;
+    -webkit-mask-image: url(icon.svg);
+    mask-image: url(icon.svg);
+}
+```
+
+## 參考資料
+* [Coloring SVGs in CSS Background Images](https://codepen.io/noahblon/post/coloring-svgs-in-css-background-images)
+* [Can I Use CSS Masks](https://caniuse.com/css-masks)

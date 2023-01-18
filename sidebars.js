@@ -41,12 +41,33 @@ const sidebars = {
         },
         {
             type: 'category',
-            label: 'CSS',
+            label: 'CSS-Tricks',
             items: [
                 {
                     type: 'doc',
                     id: 'css/table',
                     label: '【CSS】 table',
+                },
+                {
+                    type: 'doc',
+                    id: 'css/input',
+                    label: '【CSS】 input',
+                },
+                {
+                    type: 'doc',
+                    id: 'css/background',
+                    label: '【CSS】 background',
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'HTML',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'html/meta',
+                    label: '【HTML】 meta',
                 },
             ]
         },

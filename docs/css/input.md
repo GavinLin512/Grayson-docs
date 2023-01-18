@@ -1,0 +1,23 @@
+---
+title: input 相關
+last_update:
+    date: 1/18/2023
+    author: Grayson
+---
+
+## 去掉 input [type=”number”] 箭頭
+```scss
+/*去掉 input箭頭 */
+/* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+```
