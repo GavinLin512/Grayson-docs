@@ -1,3 +1,4 @@
+import Giscus from "@giscus/react";
 ---
 title: table 相關
 last_update:
@@ -35,30 +36,32 @@ import useScript from "../../src/hooks/useScript";
 export const TableCodePen = () => {
     useScript('https://cpwebassets.codepen.io/assets/embed/ei.js');
     return (
-        <p
-            className="codepen"
-            data-height="300"
-            data-default-tab="result"
-            data-slug-hash="qByPaWK"
-            data-user="gavinlin512"
-            data-preview="true"
-            style={{
-                height: '300px',
-                border: '2px solid',
-                margin: '1em 0',
-                padding: '1em'
-            }}>
-        <span>See the Pen
-            <a href="https://codepen.io/gavinlin512/pen/qByPaWK">
-            Untitled
-            </a>
-            by GavinLin512
-            (<a href="https://codepen.io/gavinlin512">@gavinlin512</a>)
-            on
-            <a href="https://codepen.io">CodePen</a>
-            .
-        </span>
-        </p>
+        <div>
+            <p
+                className="codepen"
+                data-height="300"
+                data-default-tab="result"
+                data-slug-hash="qByPaWK"
+                data-user="gavinlin512"
+                data-preview="true"
+                style={{
+                    height: '300px',
+                    border: '2px solid',
+                    margin: '1em 0',
+                    padding: '1em'
+                }}>
+                <span>See the Pen
+                    <a href="https://codepen.io/gavinlin512/pen/qByPaWK">
+                    Untitled
+                    </a>
+                    by GavinLin512
+                    (<a href="https://codepen.io/gavinlin512">@gavinlin512</a>)
+                    on
+                    <a href="https://codepen.io">CodePen</a>
+                    .
+                </span>
+            </p>
+        </div>
     );
 }
 
