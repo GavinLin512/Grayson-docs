@@ -124,8 +124,12 @@ const config = {
             title: 'More',
             items: [
               {
-                label: 'Blog',
+                label: '日常隨筆',
                 to: '/blog',
+              },
+              {
+                label: '網站說明',
+                to: '/readme',
               },
               {
                 label: 'GitHub',
