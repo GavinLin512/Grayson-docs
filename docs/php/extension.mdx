@@ -1,0 +1,50 @@
+---
+title: 安裝 PHP 套件相關
+last_update:
+    date: 2/1/2023
+    author: Grayson
+---
+
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+##  常用 extension
+> + **bz2**
+> + **curl**
+> + **fileinfo**
+> + **gd**
+> + **gettext**
+> + **mbstring**
+> + **mysqli** ( [MySQL Improved extension](https://ithelp.ithome.com.tw/articles/10271303) )
+> + **pdo_mysql**
+> + **pdo_sqlite**
+
+______
+
+> 額外補充：
+> 1. [PHP Extension List](https://help.zend.com/zend/current/content/zend%20server%20php%207.3%20extensions.htm)
+> 2. [關於 PDO(PHP Data Object extension)](https://ithelp.ithome.com.tw/articles/10271937)
+
+______
+
+## 安裝 SQLSRV
+* [PHP 官網安裝介紹](https://www.php.net/manual/en/sqlsrv.installation.php)
+* [下載SQLSRV](https://learn.microsoft.com/en-us/sql/connect/php/download-drivers-php-sql-server?view=sql-server-ver16)
+
+> 下載回來會是所有 PHP 版本的 SQLSRV，需要根據自身需求取用不同版本（ts/nts 以及版本號）。
+
+到 **php.ini** 裡面去新增 **extension :**
+
+```ini
+; Notes for Windows environments :
+;
+; - Many DLL files are located in the extensions/ (PHP 4) or ext/ (PHP 5+)
+;   extension folders as well as the separate PECL DLL download (PHP 5+).
+;   Be sure to appropriately set the extension_dir directive.
+;
+....
+
+extension=pdo_sqlsrv_80_ts_x64
+extension=sqlsrv_80_ts_x64
+```
+
+<UseGiscus></UseGiscus>

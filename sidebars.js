@@ -93,6 +93,17 @@ const sidebars = {
                 },
             ]
         },
+        {
+            type: 'category',
+            label: 'PHP',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'php/extension',
+                    label: '【PHP】 extension',
+                },
+            ]
+        },
     ],
 
   // But you can create a sidebar manually
