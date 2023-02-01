@@ -13,7 +13,7 @@ export default function UseGiscus() {
             term="Welcome to @giscus/react component!"
             reactionsEnabled="1"
             emitMetadata="0"
-            inputPosition="bottom"
+            inputPosition="top"
             theme="preferred_color_scheme"
             lang="zh-TW"
             loading="lazy"
