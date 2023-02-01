@@ -1,4 +1,3 @@
-import Giscus from "@giscus/react";
 ---
 title: table 相關
 last_update:
@@ -33,6 +32,7 @@ table tbody::-webkit-scrollbar {
 ```
 
 import useScript from "../../src/hooks/useScript";
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 export const TableCodePen = () => {
     useScript('https://cpwebassets.codepen.io/assets/embed/ei.js');
     return (
@@ -69,3 +69,5 @@ export const TableCodePen = () => {
 
 ## 參考資料
 - [css極簡方法實現固定表頭table](https://www.gushiciku.cn/pl/gxIR/zh-tw)
+
+<UseGiscus></UseGiscus>

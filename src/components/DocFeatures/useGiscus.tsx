@@ -7,7 +7,7 @@ export default function UseGiscus() {
             id="comments"
             repo="GavinLin512/Grayson-docs"
             repoId="R_kgDOIxMi7g"
-            category="Announcements"
+            category="General"
             categoryId="DIC_kwDOIxMi7s4CTrUP"
             mapping="pathname"
             term="Welcome to @giscus/react component!"
