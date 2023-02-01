@@ -71,6 +71,28 @@ const sidebars = {
                 },
             ]
         },
+        {
+            type: 'category',
+            label: 'NPM',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'npm/npm',
+                    label: '【NPM】 npm',
+                },
+            ]
+        },
+        {
+            type: 'category',
+            label: 'NodeJS',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'node_js/nvm',
+                    label: '【NodeJS】 nvm',
+                },
+            ]
+        },
     ],
 
   // But you can create a sidebar manually
