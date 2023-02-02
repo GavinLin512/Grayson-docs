@@ -11,35 +11,39 @@ import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 
 > **NVM** 為能夠在本地端切換不同 **Node.js** 版本的工具
 
+#### :bulb: 安裝方法：下載installer並安裝後，需要重新開機，即可使用 `nvm` 指令。
+
 ```shell
 Running version 1.1.10.
 
 Usage:
 
-  nvm arch                     : Show if node is running in 32 or 64 bit mode.
-  nvm current                  : Display active version.
-  nvm install <version> [arch] : The version can be a specific version, "latest" for the latest current version, or "lts" for the
-                                 most recent LTS version. Optionally specify whether to install the 32 or 64 bit version (defaults
-                                 to system arch). Set [arch] to "all" to install 32 AND 64 bit versions.
-                                 Add --insecure to the end of this command to bypass SSL validation of the remote download server.
-  nvm list [available]         : List the node.js installations. Type "available" at the end to see what can be installed. Aliased as ls.
-  nvm on                       : Enable node.js version management.
-  nvm off                      : Disable node.js version management.
-  nvm proxy [url]              : Set a proxy to use for downloads. Leave [url] blank to see the current proxy.
-                                 Set [url] to "none" to remove the proxy.
-  nvm node_mirror [url]        : Set the node mirror. Defaults to https://nodejs.org/dist/. Leave [url] blank to use default url.
-  nvm npm_mirror [url]         : Set the npm mirror. Defaults to https://github.com/npm/cli/archive/. Leave [url] blank to default url.
-  nvm uninstall <version>      : The version must be a specific version.
-  nvm use [version] [arch]     : Switch to use the specified version. Optionally use "latest", "lts", or "newest".
-                                 "newest" is the latest installed version. Optionally specify 32/64bit architecture.
-                                 nvm use <arch> will continue using the selected version, but switch to 32/64 bit mode.
-  nvm root [path]              : Set the directory where nvm should store different versions of node.js.
-                                 If <path> is not set, the current root will be displayed.
-  nvm [--]version              : Displays the current running version of nvm for Windows. Aliased as v.
+  nvm arch [32|64]             : 顯示 node 所使用的是 32 位元還是 64 位元的架構，可以指定並覆蓋當前架構
+  nvm current                  : 顯示當前所使用 node 版本
+  nvm install <version> [arch] : 安裝 node，可以指定特定版本，"latest" 表示當前最新版本，或 "lts" 表示最新的 LTS 版本，
+                                 也可以指定安裝 32 位元還是 64 位元的架構（預設為系統本身架構），設定 [arch] 為 "all" 會
+                                 同時安裝 32 位元及 64 位元的版本
+                                 添加 --insecure 在指令的最後面，可以繞過遠端下載伺服器的 SSL 驗證
+  nvm list [available]         : 顯示所有安裝的 node 版本清單，可以縮寫為 ls，添加 "available" 在指令的最後面，可以顯示目前可供下載的版本列表
+  nvm on                       : 允許 nvm 管理 node 版本
+  nvm off                      : 禁止 nvm 管理 node 版本
+  nvm proxy [url]              : 設定下載的代理地址，[url] 留空可以查看當前代理
+                                 設定 [url] 為 "none" 可以移除當前代理地址
+  nvm node_mirror [url]        : 設定 node 鏡像，預設為 https://nodejs.org/dist/，[url] 留空可以使用預設路徑
+  nvm npm_mirror [url]         : 設定 npm 鏡像，預設為 https://github.com/npm/cli/archive/，[url] 留空可以使用預設路徑
+  nvm uninstall <version>      : 解除安裝 node（必須指定特定版本號）
+  nvm use [version] [arch]     : 切換當前所使用的 node 版本，可以指定使用 "latest"、"lts" 或 "newest"，"newest" 為最新安裝的版本
+                                 也可以指定切換 32/64 位元架構
+                                 可以使用 nvm use <arch> 保持現有版本，只切換 32/64 位元架構.
+  nvm root [path]              : 指定 nvm 儲存不同版本 node 的資料夾
+                                 如果沒有指定路徑 <path>，則顯示當前儲存路徑
+  nvm [--]version              : 顯示目前 nvm 的版本，可以縮寫為 v
 ```
 
 ## 參考資料
 * [安裝 nvm 環境，Node.js 開發者必學（Windows、Mac 均適用）](https://www.casper.tw/development/2022/01/10/install-nvm/)
 * [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm)
+* [NVM for Windows](https://github.com/coreybutler/nvm-windows)
+* [Node.js的多版本管理工具之nvm](https://blog.51cto.com/chencoding/5655641)
 
 <UseGiscus></UseGiscus>
