@@ -1,0 +1,46 @@
+---
+title: AdminLTE 相關
+last_update:
+    date: 2/3/2023
+    author: Grayson
+---
+
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+## 基本設定（plugin）
+
+#### 範例如下：
+
+```php
+'plugins' => [
+    ...
+    'Plugin Name' => [
+        'active' => true,
+        'files' => [
+            [
+                'type' => 'js',
+                'asset' => false,
+                'location' => '//cdn.plugin.net/plugin.min.js',
+            ],
+            [
+                'type' => 'css',
+                'asset' => true,
+                'location' => 'css/plugin.min.css',
+            ],
+        ],
+    ],
+]
+```
+
+> * `active`: 根據此參數去設定是否要對每一個 **blade file** 去注入該 **plugin**
+> * `files`: 為一個包含所有 **plugin** 的陣列，每個 **plugin** 陣列必須包含以下參數：
+>   * `type`: 檔案類型，為 `'css'` 或 `'js'` 字串
+>   * `location`: 檔案位置，為本地路徑或網址連結字串
+>   * `asset`: 為 **Boolean** 值，判斷檔案位置是否要使用 Laravel 內建之 [asset()](https://laravel.com/docs/helpers#method-asset) 函數
+>   * `defer`: 為 **Boolean** 值，判斷 `script` 使否要加上此 attribute（只能加在 js 檔案）
+
+## 參考連結
+* [Easy AdminLTE integration with Laravel: Plugins Configuration](https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Plugins-Configuration)
+
+<UseGiscus></UseGiscus>
+

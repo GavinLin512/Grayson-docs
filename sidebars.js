@@ -104,6 +104,17 @@ const sidebars = {
                 },
             ]
         },
+        {
+            type: 'category',
+            label: 'Laravel',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'laravel/adminlte',
+                    label: '【Laravel】 AdminLTE',
+                },
+            ]
+        },
     ],
 
   // But you can create a sidebar manually
