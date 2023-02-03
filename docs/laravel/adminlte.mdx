@@ -7,6 +7,10 @@ last_update:
 
 import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 
+:::tip
+此套件為 **AdminLTE** 合併 **Laravel** 之版本，透過 `composer` 安裝
+:::
+
 ## 基本設定（plugin）
 
 #### 範例如下：
@@ -32,7 +36,8 @@ import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 ]
 ```
 
-> * `active`: 根據此參數去設定是否要對每一個 **blade file** 去注入該 **plugin**
+> * `active`: 根據此參數去設定是否要對每一個 **blade file** 去注入該 **plugin**，如果設定為 `false`，則需要在 **blade file** 手動
+              加入 `@section('plugins.PluginName', true)`
 > * `files`: 為一個包含所有 **plugin** 的陣列，每個 **plugin** 陣列必須包含以下參數：
 >   * `type`: 檔案類型，為 `'css'` 或 `'js'` 字串
 >   * `location`: 檔案位置，為本地路徑或網址連結字串
