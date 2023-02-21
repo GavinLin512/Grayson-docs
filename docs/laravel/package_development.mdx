@@ -1,0 +1,230 @@
+---
+title: Package Development 相關
+last_update:
+    date: 2/21/2023
+    author: Grayson
+---
+
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+:::note
+這裡以假設開發紀錄 **Log** 套件為例
+:::
+
+## 開發流程
+
+#### 1. 先在 `root` 創建一個新資料夾，Terminal `cd` 到此資料夾後透過 `composer init` 初始化。
+
+```shell
+PS C:\xampp\htdocs\laravel-library> cd ./packages/ppcsite/record_log
+# 初始化
+PS C:\xampp\htdocs\laravel-library\packages\ppcsite\record_log> composer init
+
+
+  Welcome to the Composer config generator
+
+
+
+This command will guide you through creating your composer.json config.
+# 輸入套件命名
+Package name (<vendor>/<name>) [user/test]: ppcsite/record_log
+# 輸入套件描述
+Description []: this package used for record log.
+# 輸入作者訊息
+Author [GavinLin512 <81368692+GavinLin512@users.noreply.github.com>, n to skip]:
+# 輸入最低穩定版本，ex: stable, RC, beta, alpha, dev
+Minimum Stability []: dev
+# 輸入套件類型
+Package Type (e.g. library, project, metapackage, composer-plugin) []: library
+# 輸入授權類型
+License []: MIT
+
+Define your dependencies.
+
+# 是否需要定義依賴套件
+Would you like to define your dependencies (require) interactively [yes]? yes
+# 以 php 為例
+Search for a package: php
+Info from https://repo.packagist.org: #StandWithUkraine
+# 輸入此依賴套件最低需求版本（或留白取最新版本）
+Enter the version constraint to require (or leave blank to use the latest version): >=8.0.2
+# 如需多個依賴則重複上述步驟
+Search for a package:
+......
+
+# 是否需要定義 require-dev
+Would you like to define your dev dependencies (require-dev) interactively [yes]? no
+# 是否支援 PSR-4 自動載入（對應命名空間名稱與檔案目錄名稱）
+Add PSR-4 autoload mapping? Maps namespace "Packages\Test" to the entered relative path. [src/, n to skip]:
+
+{
+    "name": "ppcsite/record_log",
+    "description": "this package used for record log",
+    "type": "library",
+    "require": {
+        "php": ">=8.0.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ppcsite\\RecordLog\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "GavinLin512",
+            "email": "81368692+GavinLin512@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
+# 是否照以上資訊生成 composer.json
+Do you confirm generation [yes]?
+
+# 是否要現在安裝依賴套件
+Would you like to install dependencies now [yes]? no
+
+PSR-4 autoloading configured. Use "namespace Ppcsite\RecordLog;" in src/
+Include the Composer autoloader with: require 'vendor/autoload.php';
+```
+
+#### 2. 初始化完成後會自動生成 `src` 資料夾及 `composer.json`，再來手動新增 `config` 資料夾與設定檔
+```bash
+.
+├── root
+│   └── packages
+│       └── ppcsite
+│           └── record_log
+│               ├── src
+│               └── composer.json
+
+```
+
+#### 3. 設定 **Package Discovery**，讓使用者在安裝套件時自動註冊 `Service Provider` 與 `Facade`。
+:::tip
+關於 `Service Provider` 與 `Facade` 會在後續作說明
+:::
+```json
+"extra": {
+    "laravel": {
+        "providers": [
+            "Ppcsite\\RecordLog\\RecordLogServiceProvider"
+        ],
+        "aliases": {
+            "RecordLog": "Ppcsite\\RecordLog\\RecordLog"
+        }
+    }
+}
+```
+
+#### 4. 在 `src` 資料夾新增 `Service Provider`，可以使用 `php artisan make:provider XXXServiceProvider` 指令新增。
+```bash
+.
+├── record_log
+│   ├── src
+│   │   └── RecordLogServiceProvider.php
+│   └── composer.json
+
+```
+```php
+<?php
+
+namespace Ppcsite\RecordLog;
+
+use Illuminate\Support\ServiceProvider;
+
+class RecordLogServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        // 讓 service container 連結自定義的 Facades
+        $this->app->bind('packages-record-log', function($app) {
+            return new \Ppcsite\RecordLog\RecordLog();
+        });
+        // 合併使用者與系統預設 config 設定檔，讓使用者可以合併覆寫 config 設定檔
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/record-log.php', 'record-log'
+        );
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        // 發佈 config 設定檔
+        $this->publishes([
+            __DIR__.'/../config/record-log.php' => config_path('record-log.php'),
+        ],'record-log-config');
+    }
+}
+```
+
+#### 5. 在 `src` 資料夾新增 `RecordLog.php`，裡面負責套件內所需要呼叫的 **function**。
+```bash
+.
+├── record_log
+│   ├── src
+│   │   ├── RecordLog.php
+│   │   └── RecordLogServiceProvider.php
+│   └── composer.json
+
+```
+:::tip
+關於 `config` 實作會在後續作說明
+:::
+```php
+<?php
+
+namespace Ppcsite\RecordLog;
+
+class RecordLog
+{
+    public function testRecord ()
+    {
+        return config('record-log.test1');
+    }
+    public static function testRecord2 ()
+    {
+        return config('record-log.test2');
+    }
+}
+```
+
+
+## 參考連結
+> **composer** 相關
+
+* [composer 官方文件](https://getcomposer.org/doc/04-schema.md)
+* [composer 中文文檔 (repositories)](https://learnku.com/docs/composer/2018/05-repositories/2086#a5b6ff)
+* [composer init 命令詳解](https://blog.csdn.net/github_38336924/article/details/92839546)
+* [關於 Facade 如何運作](https://docs.cornch.dev/zh-tw/laravel/9.x/container#binding)
+* [發佈 Composer 套件的事前準備](https://ithelp.ithome.com.tw/articles/10236831)
+* [PHP-Composer Package 開發、發布流程](https://zhuanlan.zhihu.com/p/78075719)
+* [Composer symlink for packages](https://medium.com/@alexandru.chitoraga/composer-symlink-for-packages-68cc15027732)
+
+> 授權相關
+
+* [[License] 淺談軟體開源的授權條款](https://dotblogs.com.tw/regionbbs/2018/09/23/light-discussions-oss-licenses)
+* [如何為你的作品選擇授權條款](https://www.gnu.org/licenses/license-recommendations.zh-tw.html)
+
+> 架構相關
+
+* [閒談軟體架構：內部函式庫](https://medium.com/%E9%96%92%E8%AB%87%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B/%E9%96%92%E8%AB%87%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B-%E5%85%A7%E9%83%A8%E5%87%BD%E5%BC%8F%E5%BA%AB-30af57af2bb7)
+
+> **Laravel** 相關
+
+* [Laravel Package Development](https://laravelpackage.com/)
+* [Creating Your Own Laravel Custom Package: A Step-by-Step Guide](https://adevait.com/laravel/how-to-create-a-custom-package-for-laravel)
+* [How to create your own Laravel packages](https://blog.devgenius.io/how-to-create-your-own-laravel-packages-2b68da22506a)
+* [Laravel Package Development with Local Composer Dependencies](https://ashallendesign.co.uk/blog/laravel-package-development-with-local-composer-dependencies)
+* [Laravel create packages](https://learn2torials.com/a/how-to-create-laravel-package)
+
+<UseGiscus></UseGiscus>

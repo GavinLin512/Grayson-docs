@@ -113,6 +113,11 @@ const sidebars = {
                     id: 'laravel/adminlte',
                     label: '【Laravel】 AdminLTE',
                 },
+                {
+                    type: 'doc',
+                    id: 'laravel/package_development',
+                    label: '【Laravel】 Package Development',
+                },
             ]
         },
     ],
