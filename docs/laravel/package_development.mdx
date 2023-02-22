@@ -12,8 +12,14 @@ import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 :::
 
 ## 開發流程
+### Composer 初始化
+ 1. 先在 `root` 創建一個新資料夾，**Terminal** `cd` 到此資料夾後透過 `composer init` 初始化。
 
-#### 1. 先在 `root` 創建一個新資料夾，Terminal `cd` 到此資料夾後透過 `composer init` 初始化。
+:::tip
+創新資料夾建議使用 `packages/<my-github-username[vendor]>/<package-name>` 的結構
+
+**Terminal** 指令：`mkdir -p packages/<my-github-username>/<package-name>`
+:::
 
 ```shell
 PS C:\xampp\htdocs\laravel-library> cd ./packages/ppcsite/record_log
@@ -88,15 +94,15 @@ PSR-4 autoloading configured. Use "namespace Ppcsite\RecordLog;" in src/
 Include the Composer autoloader with: require 'vendor/autoload.php';
 ```
 
-#### 2. 初始化完成後會自動生成 `src` 資料夾及 `composer.json`，再來手動新增 `config` 資料夾與設定檔
+#### 2. 初始化完成後會自動生成 `src` 資料夾及 `composer.json`
 ```bash
 .
 ├── root
 │   └── packages
 │       └── ppcsite
 │           └── record_log
-│               ├── src
-│               └── composer.json
+│               ├── "src"
+│               └── "composer.json"
 
 ```
 
@@ -122,7 +128,7 @@ Include the Composer autoloader with: require 'vendor/autoload.php';
 .
 ├── record_log
 │   ├── src
-│   │   └── RecordLogServiceProvider.php
+│   │   └── "RecordLogServiceProvider.php"
 │   └── composer.json
 
 ```
@@ -172,7 +178,7 @@ class RecordLogServiceProvider extends ServiceProvider
 .
 ├── record_log
 │   ├── src
-│   │   ├── RecordLog.php
+│   │   ├── "RecordLog.php"
 │   │   └── RecordLogServiceProvider.php
 │   └── composer.json
 
