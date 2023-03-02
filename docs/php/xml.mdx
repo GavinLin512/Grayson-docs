@@ -1,0 +1,52 @@
+---
+title: XML 相關
+last_update:
+    date: 3/01/2023
+    author: Grayson
+---
+
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+## XML 字串轉 php 物件
+```php
+$simpleXML_obj = new \SimpleXMLElement($xml_string);
+```
+
+## php 陣列資料新增到物件中，並轉換為 XML
+```php
+// 遞迴，array 轉 XML
+function array_to_xml($array, &$xml) {
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            if (!is_numeric($key)) {
+                $subNode = $xml->addChild("$key");
+                self::array_to_xml($value, $subNode);
+            } else {
+                $subNode = $xml->addChild("item");
+                self::array_to_xml($value, $subNode);
+            }
+        } else {
+            $xml->addChild("$key", htmlspecialchars("$value"));
+        }
+    }
+}
+```
+
+## php 物件轉 XML 字串
+```php
+$xml_string = $simpleXML_obj->asXML();
+```
+
+## 讀取 XSLT 再轉換到 XML(HTML)
+```php
+$xsl = new \DOMDocument();
+// 要讀取的檔案位置
+$domain_url = resource_path('views/client/report');
+$xsl->load("{$domain_url}/XMLToHtmlC_V1.xslt");
+$proc = new \XSLTProcessor();
+$proc->importStylesheet($xsl);
+$strxml = $proc->transformToXML($xml);
+echo $strxml;
+```
+
+<UseGiscus></UseGiscus>

@@ -69,6 +69,11 @@ const sidebars = {
                     id: 'html/meta',
                     label: '【HTML】 meta',
                 },
+                {
+                    type: 'doc',
+                    id: 'html/xml',
+                    label: '【XML】 xml',
+                },
             ]
         },
         {
@@ -101,6 +106,11 @@ const sidebars = {
                     type: 'doc',
                     id: 'php/extension',
                     label: '【PHP】 extension',
+                },
+                {
+                    type: 'doc',
+                    id: 'php/xml',
+                    label: '【PHP】 xml',
                 },
             ]
         },

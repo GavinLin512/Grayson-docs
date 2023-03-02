@@ -1,0 +1,230 @@
+---
+title: XML 相關
+last_update:
+    date: 3/01/2023
+    author: Grayson
+---
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+## XML 與 HTML 的差別
++ **XML** 被設計用來傳輸和存儲數據。
+
++ **HTML** 被設計用來顯示數據。
+
+## XML 與 XSLT
++ 通過使用 **XSLT**，可以把 **XML** 文檔轉換成 **HTML** 格式。
+
++ **XML** 使用 **XPath Syntax** 去定義節點
+
+> XSLT 範例及相關語法解釋：
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:output method="html" encoding="utf-8" indent="yes"/>
+    <!-- 定義整份文件：match="/" -->
+    <xsl:template match="/">
+		<html>
+			<head>
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>標題文字</title>
+				<style type="text/css" media="all">
+					.reportfontstyle {
+					font-family:標楷體;
+					background-color:#8DB3E2
+					}
+                    .comment_header {
+                    background: transparent;
+                    padding: 10px 20px;
+                    margin: 5px;
+                    border: 2px solid #3FA9F5;
+                    display: inline-block;
+                    <!--max-width: 150px;-->
+                    <!--break-word: break-word;-->
+                    vertical-align: middle;
+                    <!--color: #3FA9F5;-->
+                    }
+                    .text-center {
+                    text-align: center;
+                    }
+                    .text-left {
+                    text-align: left;
+                    }
+                    .d-flex {
+                    display: flex;
+                    }
+				</style>
+			</head>
+			<body>
+				<xsl:choose>
+					<xsl:when test="//param1">
+						<table width="650" border="0" cellspacing="1" cellpadding="0">
+							<tr>
+								<td>
+									<h2 align="center" class="style2">
+										<xsl:value-of select="//ReportTitle/CreditCompany"/>
+									</h2>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h2 align="center" class="style2">
+										<xsl:value-of select="//ReportTitle/CreditName"/>
+									</h2>
+								</td>
+							</tr>
+							<tr>
+								<td align="right" class="style2">
+									報告日期：<xsl:value-of select="//ReportTitle/ReportDate"/>
+								</td>
+							</tr>
+							<tr>
+								<td align="center">
+                                    <!-- 呼叫樣板 -->
+                                    <xsl:call-template name="GoogleComment"/>
+                                    <xsl:call-template name="ESG_REPORT"/>
+								</td>
+							</tr>
+						</table>
+					</xsl:when>
+				</xsl:choose>
+			</body>
+		</html>
+	</xsl:template>
+    <xsl:template name="GoogleComment">
+        <xsl:if test="//GoogleComment != ''">
+        <table cellpadding="0" cellspacing="0" border="0" width="650">
+            <tr class="reportfontstyle">
+                <td>
+                    <b>網路討論聲量</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="comment_header">
+                        總評論數
+                        <xsl:choose>
+                            <xsl:when test="//GoogleComment/google_comment_amount_by_page != ''">
+                                <xsl:value-of select="//GoogleComment/google_comment_amount_by_page" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>0</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </div>
+                    <div class="comment_header">
+                        平均星等
+                        <xsl:choose>
+                            <xsl:when test="//GoogleComment/google_rating_by_page != ''">
+                                <xsl:value-of select="//GoogleComment/google_rating_by_page" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>0</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </div>
+                    <div class="comment_header">
+                        負評論數
+                        <xsl:choose>
+                            <xsl:when test="//GoogleComment/google_neg_amount != ''">
+                                <xsl:value-of select="//GoogleComment/google_neg_amount" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>0</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellpadding="0" cellspacing="0"  width="650">
+                        <tr bgcolor='#DBE5F1'>
+                            <td width="30" class="text-center">no.</td>
+                            <td width="90" class="text-center">評論日期</td>
+                            <td width="40" class="text-center">星等</td>
+                            <td class="text-left">評論內容</td>
+                        </tr>
+                        <xsl:choose>
+                            <!-- 檢查此參數是否為空 -->
+                            <xsl:when test="//GoogleComment/commentsLastestN != ''">
+                                <!-- 迴圈計算計算流水號用 -->
+                                <xsl:variable name="level1Count" select="position() - 1"/>
+                                <xsl:for-each select="//GoogleComment/commentsLastestN/item">
+                                    <tr>
+                                        <!-- 流水號 -->
+                                        <td class="text-center">
+                                            <xsl:variable name="level2Count" select="$level1Count * 2 + position()"/>
+                                            <xsl:value-of select="$level2Count" />
+                                        </td>
+                                        <!-- 評論日期 -->
+                                        <td class="text-center">
+                                            <xsl:value-of select="comment_time" />
+                                        </td>
+                                        <!-- 星等 -->
+                                        <td class="text-center">
+                                            <xsl:value-of select="comment_rating" />
+                                        </td>
+                                        <!-- 評論內容 -->
+                                        <td class="text-left">
+                                            <xsl:value-of select="comment_content" />
+                                        </td>
+                                    </tr>
+                                </xsl:for-each>
+                            </xsl:when>
+                            <!-- 檢查此參數是否存在：not() -->
+                            <xsl:when test="not(//GoogleComment/commentsLastestN)">
+                                <tr>
+                                    <td colspan="4">
+                                        <xsl:text>報告產製中</xsl:text>
+                                    </td>
+                                </tr>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <!-- 無紀錄 -->
+                                <tr>
+                                    <td colspan="4">
+                                        <xsl:text>無任何相關紀錄</xsl:text>
+                                    </td>
+                                </tr>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </table>
+                </td>
+            </tr>
+            <!-- 分隔區塊用 -->
+            <tr>
+                <td>&#160;</td>
+            </tr>
+        </table>
+    </xsl:if>
+    </xsl:template>
+    <xsl:template name="ESG_REPORT">
+        <xsl:if test="//ESG_REPORT != ''">
+            <table cellpadding="0" cellspacing="0" border="0" width="650">
+                <tr class="reportfontstyle">
+                    <td>
+                        <b>ESG永續報告</b>
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="650">
+                <tr>
+                    <td>
+                        <!-- 將字串轉換成 HTML：disable-output-escaping="yes" -->
+                        <xsl:value-of select="//ESG_REPORT" disable-output-escaping="yes"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&#160;</td>
+                </tr>
+            </table>
+        </xsl:if>
+    </xsl:template>
+</xsl:stylesheet>
+```
+
+## 參考資料
+* [XML 簡介– 什麼是XML？](http://www.w3big.com/zh-TW/xml/xml-intro.html#gsc.tab=0)
+* [XPath Syntax](https://www.w3schools.com/xml/xpath_syntax.asp)
+
+<UseGiscus></UseGiscus>
