@@ -1,10 +1,3 @@
----
-title: Package Development 相關
-last_update:
-    date: 2/21/2023
-    author: Grayson
----
-
 import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 
 :::note
@@ -18,7 +11,10 @@ import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 :::tip
 創新資料夾建議使用 `packages/<my-github-username[vendor]>/<package-name>` 的結構
 
-**Terminal** 指令：`mkdir -p packages/<my-github-username>/<package-name>`
+**Terminal** 指令：
+```shell
+mkdir -p packages/<my-github-username>/<package-name>
+```
 :::
 
 ```shell
@@ -98,20 +94,26 @@ Include the Composer autoloader with: require 'vendor/autoload.php';
 ```bash
 .
 ├── root
-│   └── packages
-│       └── ppcsite
-│           └── record_log
-│               ├── "src"
-│               └── "composer.json"
+│   ├── packages
+│   │   ├── ppcsite
+│   │   │   ├── record_log
+│   │   │   │   ├── "src"
+│   │   │   │   └── "composer.json"
 
 ```
 
-#### 3. 設定 **Package Discovery**，讓使用者在安裝套件時自動註冊 `Service Provider` 與 `Facade`。
-:::tip
-關於 `Service Provider` 與 `Facade` 會在後續作說明
+### Service Provider 相關
+#### 1. 設定 **Package Discovery**，讓使用者在安裝套件時自動註冊 `Service Provider` 與 `Facade`。
+:::note
+關於 `Service Provider` 與 `Facade`：
+
+:star2:透過 `Service Provider` 啟動 **Laravel** 應用程式，包括註冊 `service container` 綁定、`EventListener`、`Middleware`，甚至 `Route`。
+
+:star2:`Facades` 在應用程式的 `service container` 中為 `Class` 提供了一個 `static` 介面，它們提供了一個簡潔而有力的語法來讓你使用 **Laravel** 的功能。
 :::
 ```json
-"extra": {
+{
+  "extra": {
     "laravel": {
         "providers": [
             "Ppcsite\\RecordLog\\RecordLogServiceProvider"
@@ -120,10 +122,11 @@ Include the Composer autoloader with: require 'vendor/autoload.php';
             "RecordLog": "Ppcsite\\RecordLog\\RecordLog"
         }
     }
+  }
 }
 ```
 
-#### 4. 在 `src` 資料夾新增 `Service Provider`，可以使用 `php artisan make:provider XXXServiceProvider` 指令新增。
+#### 2. 在 `src` 資料夾新增 `Service Provider`，可以使用 `php artisan make:provider XXXServiceProvider` 指令新增。
 ```bash
 .
 ├── record_log
@@ -148,9 +151,10 @@ class RecordLogServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // 定義需要註冊的服務
         // 讓 service container 連結自定義的 Facades
         $this->app->bind('packages-record-log', function($app) {
-            return new \Ppcsite\RecordLog\RecordLog();
+            return new \Ppcsite\RecordLog\Models\AdminLog();
         });
         // 合併使用者與系統預設 config 設定檔，讓使用者可以合併覆寫 config 設定檔
         $this->mergeConfigFrom(
@@ -169,41 +173,268 @@ class RecordLogServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/record-log.php' => config_path('record-log.php'),
         ],'record-log-config');
+        // 發佈 migration
+        $timestamp = date('Y_m_d_His');
+        $this->publishes([
+            __DIR__.'/../database/migrations/create_admin_logs_table.php' => database_path('migrations/'.$timestamp.'_create_admin_logs_table.php'),
+        ],'record-admin-logs-migration');
     }
 }
 ```
 
-#### 5. 在 `src` 資料夾新增 `RecordLog.php`，裡面負責套件內所需要呼叫的 **function**。
+#### 3. 在 `src` 資料夾新增 `Facades/RecordLog.php`，負責綁定套件的依賴注入方法。
 ```bash
 .
 ├── record_log
 │   ├── src
-│   │   ├── "RecordLog.php"
+│   │   ├── Facades
+│   │   │   └── "RecordLog.php"
 │   │   └── RecordLogServiceProvider.php
 │   └── composer.json
 
 ```
-:::tip
-關於 `config` 實作會在後續作說明
-:::
 ```php
 <?php
 
-namespace Ppcsite\RecordLog;
+namespace Ppcsite\RecordLog\Facades;
 
-class RecordLog
+use Illuminate\Support\Facades\Facade;
+
+/**
+ * @see \Ppcsite\RecordLog\RecordLog
+ */
+class RecordLog extends Facade
 {
-    public function testRecord ()
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     *
+     */
+    protected static function getFacadeAccessor():string
     {
-        return config('record-log.test1');
+        return 'packages-record-log';
     }
-    public static function testRecord2 ()
+}
+```
+### 套件內部相關
+:::info
+:star2:資料夾結構範例：
+
+```bash
+├── src
+│   ├── Facades
+│   ├── Contracts(interface)
+│   ├── Models
+│   ├── Commands
+│   ├── Middlewares
+│   ├── Exceptions
+│   └── Traits
+├── database
+│   ├── factories
+│   ├── seeders
+│   └── migrations
+├── config
+└── tests
+```
+:::
+#### 1. 在 `src` 資料夾新增 `Contracts/AdminLog.php`，定義 `Class` 的使用介面 `interface`。
+```bash
+.
+├── record_log
+│   ├── src
+│   │   ├── Facades
+│   │   │   └── RecordLog.php
+│   │   ├── Contracts
+│   │   │   └── "AdminLog.php"
+│   │   └── RecordLogServiceProvider.php
+│   └── composer.json
+
+```
+```php
+<?php
+
+namespace Ppcsite\RecordLog\Contracts;
+
+use Illuminate\Database\Eloquent\Model;
+
+interface AdminLog
+{
+    /**
+     * 紀錄 Log
+     *
+     * @param string $function_name
+     * @param $action
+     * @param Model|null $data_model
+     * @param $comment
+     * @return void
+     */
+    public static function Log(string $function_name, string $action, Model $data_model=null, string $comment=null): void;
+
+    /**
+     * 取得變更資料之 model 關聯
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function datatable(): \Illuminate\Database\Eloquent\Relations\MorphTo;
+}
+```
+
+#### 2. 在 `src` 資料夾新增 `Models/AdminLog.php`，定義此套件的核心 **Model**。
+```bash
+.
+├── record_log
+│   ├── src
+│   │   ├── Facades
+│   │   │   └── RecordLog.php
+│   │   ├── Contracts
+│   │   │   └── AdminLog.php
+│   │   ├── Models
+│   │   │   └── "AdminLog.php"
+│   │   └── RecordLogServiceProvider.php
+│   └── composer.json
+
+```
+```php
+<?php
+
+namespace Ppcsite\RecordLog\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
+
+class AdminLog extends Model implements \Ppcsite\RecordLog\Contracts\AdminLog
+{
+    // 操作類型
+    CONST ACTION_NEW = '新增';
+    CONST ACTION_EDIT = '編輯';
+    CONST ACTION_DELETE = '刪除';
+    CONST ACTION_SEARCH = '查詢';
+    CONST ACTION_POST = '送出';
+    CONST ACTION_DOWNLOAD = '下載';
+    CONST ACTION_UPLOAD = '上傳';
+    CONST ACTION_MAIL = '發信';
+
+    CONST ACTION_LOGIN = '登入';
+    CONST ACTION_LOGOUT = '登出';
+    CONST ACTION_REGISTER = '註冊';
+
+
+    protected $guarded = [];
+
+    public function datatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
-        return config('record-log.test2');
+        return $this->morphTo();
+    }
+
+    public static function Log(string $function_name, string $action, Model $data_model=null, string $comment=null): void
+    {
+        $ip = Request::ip();
+
+        $log = new self([
+            'function_name' => $function_name,
+            'user_id' => Auth::user()->id??0,
+//            'user_type' => $user_type??'user',
+            'action' => $action,
+            'comment' => $comment,
+            'ip' => $ip,
+        ]);
+
+        if($data_model) {
+            $log->datatable()->associate($data_model);
+        }
+
+        $log->save();
+    }
+}
+```
+#### 3. 在 `composer.json` 設定 `autoload` 資料夾為 `src`，然後在 Terminal 輸入 `composer dump-autoload`。
+:::info
+:star2: `Autoload` 為 `PHP` 自動載入的機制，可以讓我們能夠在需要這個物件的時候才去真正的引入這個 `Class`。
+:::
+```json
+{
+    "autoload": {
+        "psr-4": {
+            "Ppcsite\\RecordLog\\": "src/"
+        }
     }
 }
 ```
 
+### 套件發布
+#### 1. 以 **Packagist** 為例 (public)
+到 [Packagist](https://packagist.org/login/) 使用 **GitHub** 登入帳號，直接輸入 **repository** 的網址，然後 **Submit Package** 就完成了。
+
+
+#### 2. 以 **Gitea** 為例 (private)
+使用 **postman** 傳送一個 **PUT** 操作，範例網址如下：
+```html
+https://gitea.example.com/api/packages/{owner}/composer
+```
+:::tip
+:high_brightness:也可以加上版本資訊：
+```html
+https://gitea.example.com/api/packages/{owner}/composer?version={x.y.z}
+```
+:::
+回傳結果如下：
+
+| HTTP 狀態代碼       | 意義                                            |
+|:----------------|:----------------------------------------------|
+| 201 Created     | 此套件已經被發布.                                     |
+| 400 Bad Request | 此套件的 name 及/或 版本是無效的，或是已存在與此套件相同 name 及版本的套件. |
+
+:loudspeaker:設定套件登錄
+
+需加入以下內容到本機 **Composer** 的 `config.json` 內，通常位置會在 `<user-home-dir>/.composer/config.json`：
+```json
+{
+  "repositories": [{
+      "type": "composer",
+      "url": "https://gitea.example.com/api/packages/{owner}/composer"
+   }
+  ]
+}
+```
+若是使用身分驗證設定套件登錄，則需加入以下程式碼到 `auth.json`：
+```json
+{
+  "http-basic": {
+    "gitea.example.com": {
+      "username": "{username}",
+      "password": "{password}"
+    }
+  }
+}
+```
+:::caution
+若是在本機 Composer 資料夾找不到 `config.json` 及 `auth.json`，請先輸入以下指令創建：
+```bash
+composer config --global
+```
+:::
+
+:::note
+:star2:欄位說明如下：
+
+| 參數名 | 說明 |
+|:----|:--|
+|owner|套件的擁有者|
+|username|Gitea 的使用者名稱|
+|password|Gitea 的使用者密碼或是個人 token|
+:::
+
+套件安裝方法：
+```shell
+composer require {package_name}
+```
+或是根據指定版本安裝：
+```shell
+composer require {package_name}:{package_version}
+```
 
 ## 參考連結
 > **composer** 相關
@@ -211,10 +442,11 @@ class RecordLog
 * [composer 官方文件](https://getcomposer.org/doc/04-schema.md)
 * [composer 中文文檔 (repositories)](https://learnku.com/docs/composer/2018/05-repositories/2086#a5b6ff)
 * [composer init 命令詳解](https://blog.csdn.net/github_38336924/article/details/92839546)
-* [關於 Facade 如何運作](https://docs.cornch.dev/zh-tw/laravel/9.x/container#binding)
+* [Composer symlink for packages](https://medium.com/@alexandru.chitoraga/composer-symlink-for-packages-68cc15027732)
+* [PHP內建自動載入autoload方式跟常誤會一些觀念](https://malagege.github.io/blog/posts/PHP%E5%85%A7%E5%BB%BA%E8%87%AA%E5%8B%95%E8%BC%89%E5%85%A5autoload%E6%96%B9%E5%BC%8F%E8%B7%9F%E5%B8%B8%E8%AA%A4%E6%9C%83%E4%B8%80%E4%BA%9B%E8%A7%80%E5%BF%B5/)
+* [PHP系列 - Autoload 自動載入](http://justericgg.logdown.com/posts/196891-php-series-autoload)
 * [發佈 Composer 套件的事前準備](https://ithelp.ithome.com.tw/articles/10236831)
 * [PHP-Composer Package 開發、發布流程](https://zhuanlan.zhihu.com/p/78075719)
-* [Composer symlink for packages](https://medium.com/@alexandru.chitoraga/composer-symlink-for-packages-68cc15027732)
 
 > 授權相關
 
@@ -232,5 +464,11 @@ class RecordLog
 * [How to create your own Laravel packages](https://blog.devgenius.io/how-to-create-your-own-laravel-packages-2b68da22506a)
 * [Laravel Package Development with Local Composer Dependencies](https://ashallendesign.co.uk/blog/laravel-package-development-with-local-composer-dependencies)
 * [Laravel create packages](https://learn2torials.com/a/how-to-create-laravel-package)
+* [關於 Facade 如何運作](https://docs.cornch.dev/zh-tw/laravel/9.x/container#binding)
+
+> 套件發布相關
+
+* [Gitea package registry 官方說明文件(Composer Packages Repository)](https://docs.gitea.io/en-us/packages/composer/)
+* [Composer command line interface and commands](https://www.w3resource.com/php/composer/composer-command-line-interface-and-commands-part-5.php)
 
 <UseGiscus></UseGiscus>
