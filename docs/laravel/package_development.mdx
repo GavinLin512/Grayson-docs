@@ -135,6 +135,9 @@ Include the Composer autoloader with: require 'vendor/autoload.php';
 │   └── composer.json
 
 ```
+:::info
+**`namespace`** 的設定很重要，必須符合 **`PSR 0/PSR 4`** 的規範。
+:::
 ```php
 <?php
 
@@ -226,6 +229,7 @@ class RecordLog extends Facade
 │   ├── Facades
 │   ├── Contracts(interface)
 │   ├── Models
+│   ├── Views
 │   ├── Commands
 │   ├── Middlewares
 │   ├── Exceptions
@@ -234,6 +238,8 @@ class RecordLog extends Facade
 │   ├── factories
 │   ├── seeders
 │   └── migrations
+├── resourses
+│   └── views
 ├── config
 └── tests
 ```
@@ -350,7 +356,9 @@ class AdminLog extends Model implements \Ppcsite\RecordLog\Contracts\AdminLog
     }
 }
 ```
-#### 3. 在 `composer.json` 設定 `autoload` 資料夾為 `src`，然後在 Terminal 輸入 `composer dump-autoload`。
+#### 3. 在開發過程中如果要方便直接測試套件，需照以下步驟：
+* 在原根目錄 `composer.json` 設定 `autoload` 資料夾為 `src`。
+
 :::info
 :star2: `Autoload` 為 `PHP` 自動載入的機制，可以讓我們能夠在需要這個物件的時候才去真正的引入這個 `Class`。
 :::
@@ -363,6 +371,26 @@ class AdminLog extends Model implements \Ppcsite\RecordLog\Contracts\AdminLog
     }
 }
 ```
+* 在 `config\app` 中加入 `Package Service Providers` 及 `Class Aliases`。
+```php
+[
+    'providers' => [
+        ...
+        /*
+         * Package Service Providers...
+         */
+        Ppcsite\RecordLog\RecordLogServiceProvider::class,
+        ...
+    ],
+    'aliases' => Facade::defaultAliases()->merge([
+        // 'ExampleClass' => App\Example\ExampleClass::class,
+        'RecordLog' => Ppcsite\RecordLog\Facades\RecordLog::class,
+    ])->toArray(),
+]
+```
+
+* 在 Terminal 輸入 `composer dump-autoload`。
+
 
 ### 套件發布
 #### 1. 以 **Packagist** 為例 (public)
@@ -370,11 +398,17 @@ class AdminLog extends Model implements \Ppcsite\RecordLog\Contracts\AdminLog
 
 
 #### 2. 以 **Gitea** 為例 (private)
-使用 **postman** 傳送一個 **PUT** 操作，範例網址如下：
+將該套件資料夾打包成一個 `.zip` 檔，透過 **postman** 傳送一個 **`PUT`** 操作，將檔案傳到 **Gitea Api** 網址底下，範例如下：
 ```html
 https://gitea.example.com/api/packages/{owner}/composer
 ```
+:::caution
+打包時注意不要將 `vendor` 資料夾也打包進去。
+:::
+
 :::tip
+:star2:傳送資料時，在 body 中選擇 binary，即可選擇打包後的檔案上傳。
+
 :high_brightness:也可以加上版本資訊：
 ```html
 https://gitea.example.com/api/packages/{owner}/composer?version={x.y.z}
@@ -382,10 +416,10 @@ https://gitea.example.com/api/packages/{owner}/composer?version={x.y.z}
 :::
 回傳結果如下：
 
-| HTTP 狀態代碼       | 意義                                            |
-|:----------------|:----------------------------------------------|
-| 201 Created     | 此套件已經被發布.                                     |
-| 400 Bad Request | 此套件的 name 及/或 版本是無效的，或是已存在與此套件相同 name 及版本的套件. |
+| HTTP 狀態代碼       | 意義                                     |
+|:----------------|:---------------------------------------|
+| 201 Created     | 此套件已經被發布.                              |
+| 400 Bad Request | 此套件的名稱 及/或 版本是無效的，或是已存在與此套件相同名稱及版本的套件. |
 
 :loudspeaker:設定套件登錄
 
