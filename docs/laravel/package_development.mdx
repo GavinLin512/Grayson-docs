@@ -5,13 +5,19 @@ import UseGiscus from "../../src/components/DocFeatures/useGiscus";
 :::
 
 ## 開發流程
-### Composer 初始化
- 1. 先在 `root` 創建一個新資料夾，**Terminal** `cd` 到此資料夾後透過 `composer init` 初始化。
+### Git 版控前置作業（GitHub）
+ 1. 會在 **GitHub** 上先新增一個 **repository**。
+ 2. 在開發用的 **Laravel** 專案中直接 **clone** 剛剛新增的 **repository** 到 `packages/ppcsite/record_log`
 
 :::tip
-創新資料夾建議使用 `packages/<my-github-username[vendor]>/<package-name>` 的結構
+:star2:資料夾建議使用 `packages/<my-github-username[vendor]>/<package-name>` 的結構
+:::
 
-**Terminal** 指令：
+### Composer 初始化
+ 1. **Terminal** `cd` 到剛剛新增的資料夾，透過 `composer init` 初始化。
+
+:::tip
+**Terminal** 指令：（若無使用版控，直接在 `root` 創一個資料夾）
 ```shell
 mkdir -p packages/<my-github-username>/<package-name>
 ```
