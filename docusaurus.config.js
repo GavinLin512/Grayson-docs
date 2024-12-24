@@ -1,13 +1,13 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const lightCodeTheme = require('prism-react-renderer').themes.github;
+const darkCodeTheme = require('prism-react-renderer').themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Grayson\'s Docs', // 標題
-  tagline: '這個人很懶，甚麼都沒有留下',
+  tagline: '分享工作上遇到的技術問題與成長過程',
   url: 'https://grayson-docs.pages.dev', // 主機站名，先使用 cloudflare pages
   baseUrl: '/', // 預設路徑
   onBrokenLinks: 'throw', // 檢測到無效連結時

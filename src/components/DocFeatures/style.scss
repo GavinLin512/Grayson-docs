@@ -1,0 +1,16 @@
+.smooth-image {
+  -webkit-transition-property: opacity;
+  transition-property: opacity;
+  -webkit-transition-duration: 1s;
+  transition-duration: 1s;
+  -webkit-transition-timing-function: cubic-bezier(0.3, 0, 0.4, 1);
+  transition-timing-function: cubic-bezier(0.3, 0, 0.4, 1);
+}
+
+.image-visible {
+  opacity: 1;
+}
+
+.image-hidden {
+  opacity: 0;
+}

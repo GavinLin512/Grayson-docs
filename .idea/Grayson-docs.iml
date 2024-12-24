@@ -4,5 +4,11 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="jquery-3.5.1.slim" level="application" />
+    <orderEntry type="library" name="multiscroll.js" level="application" />
+    <orderEntry type="library" name="swiper" level="application" />
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="d23abc2a-566c-4456-a088-68be59c479dc" />
   </component>
 </module>

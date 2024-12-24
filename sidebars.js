@@ -130,6 +130,22 @@ const sidebars = {
                 },
             ]
         },
+        {
+            type: 'category',
+            label: 'Vue',
+            items: [
+                {
+                    type: 'doc',
+                    id: 'vue/lifecycle_hooks',
+                    label: '【Vue】 Lifecycle Hooks',
+                },
+                // {
+                //     type: 'doc',
+                //     id: 'laravel/package_development',
+                //     label: '【Laravel】 Package Development',
+                // },
+            ]
+        },
     ],
 
   // But you can create a sidebar manually
