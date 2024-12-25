@@ -135,6 +135,11 @@ const config = {
                 label: 'GitHub',
                 href: 'https://github.com/GavinLin512',
               },
+              {
+                html:`
+                <a href="https://app.argos-ci.com/gavinlin512/Grayson-docs/reference" title="Covered by Argos Visual Testing"><img alt="Argos Badge" src="https://argos-ci.com/badge.svg"></a>
+                `,
+              }
             ],
           },
         ],
