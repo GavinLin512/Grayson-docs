@@ -23,9 +23,12 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
+        
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps --force
+        
       - name: Run visual tests
-        run: npm run test:visual
+        run: npm run argos-chrome
 
       - name: Upload screenshots to Argos CI
         env:
