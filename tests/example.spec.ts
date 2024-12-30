@@ -8,7 +8,7 @@ const pages = [
 
 for (const { name, path } of pages) {
     test(`Run Argos screenshot on ${name} (${path})`, async ({ page }) => {
-        await page.goto(path);
+        await page.goto(`http://localhost:3000${path}`);
         await argosScreenshot(page, path);
     });
 }
