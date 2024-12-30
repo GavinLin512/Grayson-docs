@@ -28,7 +28,16 @@ jobs:
         run: npx playwright install --with-deps --force
 
       - name: Run server
-        run: npm start
+        run: npm start > server.log 2>&1 &
+
+      - name: Wait for server to start
+        run: sleep 10
+
+      - name: Wait for server readiness
+        run: |
+          for i in {1..30}; do 
+            curl -f http://localhost:YOUT_PORT/health && break || sleep 2; 
+          done
         
       - name: Run visual tests
         run: npm run argos-chrome
