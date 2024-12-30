@@ -27,22 +27,17 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps --force
 
-      - name: Run server
-        run: npm start > server.log 2>&1 &
-
-      - name: Wait for server to start
-        run: sleep 10
-
-      - name: Wait for server readiness
-        run: |
-          for i in {1..30}; do 
-            curl -f http://localhost:3000 && break || sleep 2; 
-          done
+#      - name: Run server
+#        run: npm start > server.log 2>&1 &
+#
+#      - name: Wait for server to start
+#        run: sleep 10
+#
+#      - name: Wait for server readiness
+#        run: |
+#          for i in {1..30}; do
+#            curl -f http://localhost:3000 && break || sleep 2;
+#          done
         
       - name: Run visual tests
         run: npm run argos-chrome
-
-      - name: Upload screenshots to Argos CI
-        env:
-          ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
-        run: npx argos upload
