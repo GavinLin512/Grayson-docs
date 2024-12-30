@@ -26,6 +26,9 @@ jobs:
         
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps --force
+
+      - name: Run server
+        run: npm start
         
       - name: Run visual tests
         run: npm run argos-chrome
