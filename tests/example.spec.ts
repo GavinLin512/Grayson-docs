@@ -15,6 +15,8 @@ const viewports = [
 for (const { name, path } of pages) {
     test(`Run Argos screenshot on ${name} (${path})`, async ({ page}) => {
         await page.goto(`http://localhost:3000${path}`);
-        await argosScreenshot(page, name, viewports: viewports);
+        await argosScreenshot(page, name, {
+            viewports: viewports
+        });
     });
 }
