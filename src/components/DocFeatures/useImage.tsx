@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import './style.scss';
 import noImage from './image/no-image.png'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import reactLottie from './image/react_lottie.json';
 
 const useImage = ({src, alt}) => {
     // 判斷加載狀態
@@ -29,6 +31,11 @@ const useImage = ({src, alt}) => {
                     <span className="loader" />
                 </div>
             )}
+            <DotLottieReact
+                data={reactLottie}
+                loop
+                autoplay
+            />
         </div>
     );
 };

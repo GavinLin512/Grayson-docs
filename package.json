@@ -19,14 +19,15 @@
     "@docusaurus/core": "^3.6.3",
     "@docusaurus/preset-classic": "^3.6.3",
     "@giscus/react": "^3.0.0",
+    "@lottiefiles/dotlottie-react": "^0.12.1",
     "@mdx-js/react": "^3.1.0",
+    "@playwright/test": "^1.49.1",
     "clsx": "^1.2.1",
     "docusaurus-plugin-sass": "^0.2.6",
     "prism-react-renderer": "^2.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sass": "^1.57.1",
-    "@playwright/test": "^1.49.1"
+    "sass": "^1.57.1"
   },
   "devDependencies": {
     "@argos-ci/playwright": "^3.9.4",
