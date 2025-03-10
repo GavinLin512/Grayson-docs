@@ -1,0 +1,93 @@
+---
+title: Prisma Schema 介紹
+last_update:
+    date: 3/09/2025
+    author: Grayson
+---
+
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+```tsx filename="schema.prisma"
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// 可以有複數個 generator
+generator client {
+  provider = "prisma-client-js"
+}
+
+// db 連接設定：只能有一個 db
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// @ 開頭為 prisma 定義好的類別
+// Amgiguous relation detected 錯誤：兩個相同的關聯，無法對應(自定義 label 可以解決)
+model User {
+  id             String   @id @default(uuid()) // @default(autoincrement()) 安全性較低
+  age            Int
+  email          String   @unique
+  name           String?  // optional
+  isAdmin        Boolean
+  role           Role     @default(BASIC)
+  // largeNumber   BigInt
+  // preferences   Json // postgresql 專用
+  blob           Bytes // Unsupported("")
+  createdAt      DateTime @default(now()) // create data 自動加上當下時間
+  updatedAt      DateTime @updatedAt // 只要 update data 會自動更新當下時間
+  // 被 Post 關聯
+  posts          Post[]
+  writtenPosts   Post[] @relation("WrittenPosts") // 透過自定義 label 指定 relation
+  favoritePosts  Post[] @relation("FavoritePosts")
+  userPreference UserPreference? // hasOne 關聯
+
+  @@unique([age, name]) // age + name 必須是唯一值
+  @@index([email, name]) // 加上 db index
+  @@map("user")
+}
+
+model UserPreference {
+  id            String  @id @default(uuid())
+  emailUpdates  Boolean
+  user          User @relation(fields: [userId], references: [id])
+  userId        String @unique // hasOne 關聯必定唯一
+}
+
+model Post {
+  // id            String @id @default(uuid())  
+  title         String
+  averageRating Float // Decimal
+  // 關聯 user
+  author        User     @relation("WrittenPosts", fields: [authorId], references: [id])
+  authorId      String   // 關聯欄位 type 需要一致 
+  favoritedBy   User     @relation("FavoritePosts", fields: [authorId], references: [id])
+  favoritedById String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  categories    Category[]  
+
+  @@id([title, authorId]) // 用 title, authorId 代替 id 當作主鍵
+}
+
+model Category {
+  id    String   @id @default(uuid())
+  name  String   @unique
+  posts Post[]
+}
+
+enum Role{
+  BASIC
+  EDITOR
+  ADMIN
+}
+```
+
+```shell
+npx prisma migrate dev --name
+```
+
+<UseGiscus></UseGiscus>

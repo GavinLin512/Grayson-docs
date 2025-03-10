@@ -1,0 +1,172 @@
+---
+title: Prisma Client 介紹
+last_update:
+    date: 3/09/2025
+    author: Grayson
+---
+
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+```tsx filename="script.tsx"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient({ log: ["query"] })
+
+async function main(params:type) {
+  await prisma.user.deleteMany() // 避免測試出錯用，刪除全部資料（或是可以加 where 條件）
+  const user = await prisma.user.create({
+    data: {
+      name: "Grayson",
+      email: "grayson@gmail.com",
+      age: 27,
+      userPreference: {
+        create: {
+          emailUpdates: true,
+        },
+      },
+    },
+    include: {
+      userPreference: true,
+    },
+    select: {
+      name: true,
+      // userPreference: true,
+      userPreference: {
+        select: {
+          id: true,
+        },
+      },
+    }
+  })
+
+  const users = await prisma.user.createMany({
+    data: [{
+        name: "Grayson",
+        email: "grayson@gmail.com",
+        age: 27,
+    }, {
+        name: "Urban",
+        email: "urban@gmail.com",
+        age: 25,
+    }],
+  })
+
+  console.log(users) // { count: 2 }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: "grayson@gmail.com",
+      // 根據 schema 定義的 @@unique([age, name]) 搜尋，findUnique 不可單獨搜尋 age, name
+      age_name: {
+        age: 27,
+        name: "grayson",
+      }
+    },
+    // select, include
+  })
+  // 可以單獨搜尋 age, name
+  const user = await prisma.user.findFirst({
+    where: {
+      name: "Grayson", // 模糊搜尋
+    },
+    // select, include
+  })
+  // findMany 相同 findFirst，只是會變 array 結構
+  const users = await prisma.user.findMany({
+    where: {
+      name: { 
+        equals: "Grayson", // 完全比對搜尋
+        not: "Sally",
+        in: ["Grayson","Sally"], // notIn
+      },
+      age: {
+        lt: 20, // less then <, lte <=
+        gt: 25, // greater then >, gte >=
+      },
+      email: {
+        contains: "@gmail.com" // like %@gmail.com%
+        endsWith: "@hotmail.com" // like @hotmail.com%
+        startsWith: "grayson" // like %grayson
+      },
+      // and 條件搜尋，OR、NOT 相同
+      AND: [{ email: { startsWith: "grayson" } }, { name: "Joe" }],
+      // 關聯查詢
+      userPreference: {
+        emailUpdates: true,
+      },
+      writtenPosts: {
+        every: {
+          // title: "Test",
+          title: { startsWith: "Test" },
+        } // none, some
+      }
+    },
+    orderBy: {
+      age: "asc",
+    }
+    distinct: ["name", "age"], // 返回重複 name 的第一筆
+    take: 2, // 只取前兩筆
+    skip: 1, // 跳過第一筆資料（搭配 take 等於取到第二、三筆資料）
+    // select, include
+  })
+  console.log(users.length)
+
+  const posts = await.post.findMany({
+    where: {
+      author: {
+        is: {
+          age: 27,
+        }, // isNot
+      },
+    },
+  })
+  // updateMany
+  // update error 可能是欄位非唯一值
+  const user = await prisma.user.update({
+    where: {
+      email: "grayson@gmail.com",
+    },
+    data: {
+      email: "grayson@hotmail.com",
+      age: {
+        increment: 1, // 數字加1，decrement, multiply, divide
+      },
+      userPreference: {
+        // 新增關聯資料
+        create: {
+          emailUpdates: true,
+        },
+        // 綁定資料到已存在的關聯資料，disconnect 解除關聯
+        connect: {
+          id: "21enlkj-n12j-12hu-7218-12pe1o2eke12",
+        },
+      },
+    },
+    // include, select
+  })
+
+  const user = await.prisma.user.delete({
+    where: {
+      email: "grayson@gmail.com",
+    }
+  })
+  // 第一次會 log 出已刪除的資料，再試一次就會報錯（找不到該 user）
+  console.log(user)
+}
+
+main()
+  .catch(e => {
+    console.error(e.message)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })
+
+```
+
+```shell
+// 自動產生 snippet 可能沒用，需要用重新開啟檔案或是 cmd 點擊 function 讓他重新讀取 ts 檔案
+npx prisma generate
+```
+
+<UseGiscus></UseGiscus>
