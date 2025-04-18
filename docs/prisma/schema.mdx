@@ -37,7 +37,7 @@ model User {
   // largeNumber   BigInt
   // preferences   Json // postgresql 專用
   blob           Bytes // Unsupported("")
-  createdAt      DateTime @default(now()) // create data 自動加上當下時間
+  createdAt      DateTime @default(now()) @map('created_at') // create data 自動加上當下時間，map 更改欄位名稱
   updatedAt      DateTime @updatedAt // 只要 update data 會自動更新當下時間
   // 被 Post 關聯
   posts          Post[]
@@ -47,7 +47,7 @@ model User {
 
   @@unique([age, name]) // age + name 必須是唯一值
   @@index([email, name]) // 加上 db index
-  @@map("user")
+  @@map("user") // 改 table name
 }
 
 model UserPreference {
