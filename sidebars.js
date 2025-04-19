@@ -162,6 +162,17 @@ const sidebars = {
         },
       ],
     },
+    {
+      type: "category",
+      label: "NextJs",
+      items: [
+        {
+          type: "doc",
+          id: "nextjs/tsconfig",
+          label: "【NextJs】 tsconfig",
+        },
+      ],
+    },
   ],
 
   // But you can create a sidebar manually

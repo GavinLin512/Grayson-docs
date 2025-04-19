@@ -1,0 +1,159 @@
+---
+title: tsconfig
+last_update:
+    date: 4/19/2025
+    author: Grayson
+---
+
+import UseGiscus from "../../src/components/DocFeatures/useGiscus";
+
+```Json
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
+    "module": "esnext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "types": [
+      "@types/bun"
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+
+```
+
+好的，這是一個針對 Next.js 專案的 `tsconfig.json` 檔案，以下是每個參數的詳細解釋：
+
+**`compilerOptions` (編譯器選項)**
+
+這部分包含了 TypeScript 編譯器 (`tsc`) 在處理你的程式碼時所使用的各種設定。
+
+1.  **`"target": "ESNext"`**
+    *   **作用**: 設定 TypeScript 編譯後輸出的 JavaScript 程式碼要符合哪個 ECMAScript (JavaScript) 標準版本。
+    *   **`"ESNext"`**: 表示輸出為最新、最現代的 JavaScript 語法。
+    *   **為何這樣設定**: 在 Next.js 專案中，實際將 TypeScript (和現代 JavaScript) 轉換為瀏覽器可相容的舊版 JavaScript 的工作是由 Next.js 內建的工具（如 SWC 或 Babel）完成的。將 `target` 設為 `ESNext` 可以讓你在原始碼中使用最新的 JS 功能，並讓後續的建置工具去處理兼容性問題。
+
+2.  **`"lib": ["dom", "dom.iterable", "esnext"]`**
+    *   **作用**: 指定編譯過程中需要包含哪些內建的 TypeScript 類型定義庫檔案 (`.d.ts`)。這些檔案提供了對 JavaScript 執行環境（如瀏覽器或 Node.js）以及 JavaScript 語言本身功能的類型描述。
+    *   **`"dom"`**: 包含瀏覽器環境的 DOM (Document Object Model) API 的類型定義，例如 `window`, `document`, `setTimeout` 等。對於前端開發是必需的。
+    *   **`"dom.iterable"`**: 包含 DOM 集合（如 `NodeList`）的可迭代 (iterable) 介面的類型定義，讓你可以在 `for...of` 循環中使用它們。
+    *   **`"esnext"`**: 包含最新 ECMAScript 標準中所有功能的類型定義，與 `"target": "ESNext"` 相呼應，確保你可以安全地使用最新的 JavaScript 功能（如 `Promise.allSettled` 等）並獲得類型檢查。
+
+3.  **`"allowJs": true`**
+    *   **作用**: 允許在你的 TypeScript 專案中也包含並編譯 JavaScript 檔案 (`.js` 或 `.jsx`)。
+    *   **為何這樣設定**: 方便將現有的 JavaScript 程式碼逐步遷移到 TypeScript，或者允許在專案中同時使用 TS 和 JS 檔案。在 Next.js 專案中很常見。
+
+4.  **`"skipLibCheck": true`**
+    *   **作用**: 跳過對所有宣告檔案 (`.d.ts`)（通常是來自 `node_modules` 的依賴套件）的類型檢查。
+    *   **為何這樣設定**: 可以顯著加快編譯和類型檢查的速度，特別是在大型專案中。它假設你使用的第三方函式庫的類型定義是正確的。雖然在極少數情況下可能隱藏函式庫自身的類型問題，但通常是安全且推薦的，以提高開發效率。
+
+5.  **`"strict": true`**
+    *   **作用**: 啟用所有 TypeScript 的嚴格類型檢查選項。這是一個總開關，會開啟如 `noImplicitAny`, `strictNullChecks`, `strictFunctionTypes` 等一系列更嚴格的檢查規則。
+    *   **為何這樣設定**: 強烈推薦使用！它能在編譯階段捕捉到更多潛在的錯誤（例如 `null` 或 `undefined` 的處理、隱含的 `any` 類型等），從而提高程式碼的穩定性和可靠性。
+
+6.  **`"noEmit": true`**
+    *   **作用**: 指示 TypeScript 編譯器 (`tsc`) 只進行類型檢查，**不**產生任何輸出的 JavaScript 檔案。
+    *   **為何這樣設定**: 在 Next.js 專案中，將 TypeScript 轉換為 JavaScript 的工作是由 Next.js 的建置流程（使用 SWC/Babel）負責的，而不是直接使用 `tsc` 來輸出檔案。因此，`tsc` 的主要職責變成了純粹的類型檢查（例如，你可以執行 `npx tsc --noEmit` 來檢查類型錯誤）。
+
+7.  **`"esModuleInterop": true`**
+    *   **作用**: 啟用更好的 CommonJS 模組（舊式 Node.js 模組，使用 `require`/`module.exports`）和 ES 模組（標準 JavaScript 模組，使用 `import`/`export`）之間的互操作性。它會產生一些輔助程式碼來簡化從 ES 模組導入 CommonJS 模組的過程。
+    *   **為何這樣設定**: 讓你在 TypeScript/ES 模組程式碼中能更自然地導入許多舊有的 npm 套件。幾乎所有現代專案都需要這個選項。
+
+8.  **`"exactOptionalPropertyTypes": true`**
+    *   **作用**: 啟用更嚴格的選擇性屬性 (optional property) 檢查。當這個選項開啟時，如果一個類型被定義為 `prop?: string`，你不能明確地將 `undefined` 賦值給 `prop`。你只能賦予 `string` 類型的值，或者完全省略這個屬性。
+    *   **為何這樣設定**: 這有助於區分屬性是「未提供」還是「值為 `undefined`」，可以防止一些潛在的關於 `undefined` 被意外使用的錯誤。這是比預設行為更嚴格的檢查。
+
+9.  **`"module": "esnext"`**
+    *   **作用**: 指定 TypeScript 應該使用哪種模組系統來**生成**程式碼（如果 `noEmit` 是 `false` 的話）。
+    *   **`"esnext"`**: 表示使用最新的 ES 模組語法 (`import`/`export`)。
+    *   **為何這樣設定**: 與現代 JavaScript 開發實踐保持一致。即使 `noEmit` 為 `true`，這個設定也會影響 TypeScript 如何解析和理解模組之間的關係。Next.js 的建置工具會處理最終的模組格式。
+
+10. **`"moduleDetection": "force"`**
+    *   **作用**: 控制 TypeScript 如何偵測一個檔案是 ES 模組還是 CommonJS 腳本（即使 `noEmit` 為 `true`，這對於類型檢查上下文仍然重要）。`"force"` 會將所有非宣告檔案（`.d.ts` 以外的檔案）都視為 ES 模組，無論其中是否包含 `import`/`export` 語句或 `package.json` 的 `type` 設定。
+    *   **為何這樣設定**: 確保模組處理方式的一致性，尤其是在混合不同類型檔案或複雜設定的專案中。Next.js 通常推薦 `force` 或 `auto`。
+
+11. **`"moduleResolution": "bundler"`**
+    *   **作用**: 指定 TypeScript 用來查找模組檔案（例如 `import './myModule'`）的策略。
+    *   **`"bundler"`**: 模仿現代打包工具（如 Webpack, Vite, Parcel, 以及 Next.js 使用的 SWC）的模組解析策略。它能更好地處理 `package.json` 中的 `exports` 欄位等現代 Node.js 功能。
+    *   **為何這樣設定**: 這是目前最適合使用打包工具的專案的模組解析策略，比舊的 `"node"` 或 `"nodenext"` 更準確地反映了實際建置時的行為。
+
+12. **`"resolveJsonModule": true`**
+    *   **作用**: 允許直接導入 `.json` 檔案作為模組，並且 TypeScript 會根據 JSON 檔案的結構自動推斷其類型。
+    *   **為何這樣設定**: 方便導入設定檔或靜態資料，並獲得類型安全。
+
+13. **`"isolatedModules": true`**
+    *   **作用**: 強制實施一些限制，以確保每個 TypeScript 檔案都可以被**獨立地**轉換（transpile）成 JavaScript，而不需要了解其他檔案的類型資訊。這是因為像 Babel 或 SWC 這樣的工具通常是單檔案轉換的。例如，它禁止使用 `const enum`，並且要求在重新導出類型時使用 `export type { MyType } from './myType'` 而不是 `export { MyType } from './myType'`。
+    *   **為何這樣設定**: 這是與 Next.js 的建置工具 (SWC/Babel) 相容所必需的，因為它們依賴單檔案轉換。
+
+14. **`"jsx": "preserve"`**
+    *   **作用**: 控制如何處理 JSX 語法。
+    *   **`"preserve"`**: 在 TypeScript 編譯輸出的檔案中（如果 `noEmit` 是 `false` 的話，理論上）保留原始的 JSX 語法，輸出為 `.jsx` 檔案。
+    *   **為何這樣設定**: 因為實際將 JSX 轉換為 JavaScript 函式呼叫（例如 `React.createElement(...)`）的工作是由 Next.js 的建置工具 (SWC/Babel) 完成的。TypeScript 編譯器只需要保留 JSX 語法供後續工具處理即可。
+
+15. **`"incremental": true`**
+    *   **作用**: 啟用增量編譯。`tsc` 會在第一次編譯後儲存專案的結構和編譯狀態資訊（在 `.tsbuildinfo` 檔案中），在後續執行時，只重新編譯發生變化的檔案及其依賴項。
+    *   **為何這樣設定**: 加快後續執行類型檢查 (`tsc --noEmit`) 的速度。
+
+16. **`"plugins": [{"name": "next"}]`**
+    *   **作用**: 設定 TypeScript 語言服務 (Language Service) 的插件。這個 `"next"` 插件是 Next.js 提供的，用於增強在支援 TS 語言服務的編輯器（如 VS Code）中的開發體驗。例如，它可以改進對路徑別名 (`@/*`) 的解析、提供對 Next.js 特定 API（如 `next/link`, `next/image`）的類型檢查和自動完成等。
+    *   **為何這樣設定**: 提升在編輯器中開發 Next.js 專案的效率和準確性。
+
+17. **`"paths": {"@/*": ["./src/*"]}`**
+    *   **作用**: 設定路徑別名 (path aliases)。允許你在 `import` 語句中使用 `@/` 來代替冗長的相對路徑。
+    *   **`"@/*": ["./src/*"]`**: 這條規則表示，所有以 `@/` 開頭的導入路徑，都應該相對於 `baseUrl`（預設是 `tsconfig.json` 所在的目錄）下的 `src/` 目錄去查找。例如，`import Button from '@/components/Button'` 會被解析為相對於 `src/components/Button`。
+    *   **為何這樣設定**: 提高程式碼的可讀性和可維護性，避免出現像 `../../../components/Button` 這樣的深層相對路徑。
+
+18. **`"types": ["@types/bun"]`**
+    *   **作用**: 明確指定哪些 `@types` 套件提供的類型定義應該被包含在全域編譯範圍內。**注意**: 如果設定了 `types` 陣列，TypeScript 將*只*包含這個陣列中列出的套件以及 `lib` 中指定的庫，而**不會**自動掃描 `node_modules/@types` 下的所有其他套件。
+    *   **為何這樣設定**: 在這個例子中，它明確地加入了 Bun 執行環境的類型定義。這表示專案可能在某些部分（例如伺服器端、腳本）使用了 Bun 特有的 API，即使主要框架是 Next.js。如果你的專案只使用 Node.js 環境，可能不需要這一項。如果省略 `types` 屬性，TypeScript 會自動包含 `node_modules/@types` 下的所有類型包。
+
+**`include` (包含的檔案)**
+
+指定哪些檔案會被 TypeScript 編譯器納入處理範圍。
+
+1.  **`"next-env.d.ts"`**: 這是 Next.js 自動產生的一個檔案，包含了對 Next.js 環境的一些全域類型定義。必須包含。
+2.  **`"**/*.ts"`**: 包含專案根目錄及其所有子目錄下的所有 `.ts` (TypeScript) 檔案。`**` 表示遞迴匹配所有層級的目錄。
+3.  **`"**/*.tsx"`**: 包含專案根目錄及其所有子目錄下的所有 `.tsx` (TypeScript with JSX) 檔案。
+4.  **`".next/types/**/*.ts"`**: 包含 Next.js 在開發或建置過程中於 `.next/types` 目錄下產生的類型檔案。這對於獲取例如類型化的路由 (Typed Routes) 等功能很重要。
+
+**`exclude` (排除的檔案)**
+
+指定哪些檔案或目錄**不**應該被 TypeScript 編譯器處理。
+
+1.  **`"node_modules"`**: 排除 `node_modules` 目錄。這是必要的，因為你不希望 TypeScript 去編譯你的所有專案依賴。依賴套件的類型通常透過它們自帶的 `.d.ts` 檔案或 `@types` 套件來引入。
+
+總結來說，這個 `tsconfig.json` 檔案為 Next.js 專案提供了一套現代化、嚴格且高效的 TypeScript 設定，兼顧了開發體驗、類型安全和與 Next.js 建置流程的兼容性。
